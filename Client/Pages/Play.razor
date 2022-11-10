@@ -1,0 +1,103 @@
+﻿@page "/play"
+@using System.Timers;
+
+<div class="row">
+	<div class="col">
+		<h1>Play</h1>
+	</div>
+	<div class="col text-end my-auto">
+		<h3>Total Credits: @credits</h3>
+	</div>
+</div>
+<div>
+	Rate: @rate
+</div>
+
+<div class="row">
+	<div class="col text-center mt-4">
+		<button class="btn btn-success btn-lg" type="button" @onclick="IncrementCredits"  onkeydown="return (event.keyCode!=13)">$$$</button>
+	</div>
+</div>
+
+<div class="row mt-4">
+	<div class="col text-end">
+		Cost: @RateUpgradeCost
+	</div>
+	<div class="col text-end">
+		
+	</div>
+</div>
+
+<div class="row mt-4">
+	<div class="col text-end">
+		<button class="btn btn-primary" type="button" @onclick="IncreaseRate">Upgrade Rate</button>
+	</div>
+	<div class="col">
+		<button class="btn btn-primary" type="button" @onclick="IncreaseAutoclicker">Upgrade Autoclicker</button>
+	</div>
+</div>
+
+@code {
+	private long credits;
+	private int rate = 1;
+	private double autoclickRate;
+
+	private long RateUpgradeCost { get; set; } = 10;
+
+	protected override Task OnInitializedAsync()
+	{
+		credits = 0;
+		return base.OnInitializedAsync();
+	}
+
+	private async Task IncrementCredits()
+	{
+		credits += rate;
+	}
+
+	private async Task IncreaseRate()
+	{
+		//long cost = rate * rate * 10;
+		if (credits >= RateUpgradeCost)
+		{
+			rate *= 2;
+			credits -= RateUpgradeCost;
+		}
+		RateUpgradeCost = rate * rate * 10;
+	}
+
+	private async void IncreaseAutoclicker()
+	{
+		//long cost;
+		//if (autoclickRate == 0)
+		//{
+		//	cost = 10;
+		//}
+		//else 
+		//{
+		//	cost = (long)(10 / Math.Pow(2, autoclickRate));
+		//}
+		//if (credits >= cost)
+		//{
+		//	if (autoclickRate == 0)
+		//	{
+		//		var thread = new System.Threading.Thread(async () => await RunClicker());
+		//		thread.Start();
+		//	}
+		//	else
+		//	{
+		//		autoclickRate /= 2;
+		//	}
+		//	credits -= cost;
+		//}
+	}
+
+	//private async Task RunClicker(double interval)
+	//{
+	//	while (true)
+	//	{
+	//		await Task.Delay(1000 * (int)autoclickRate);
+	//		credits += rate;
+	//	}
+	//}
+}

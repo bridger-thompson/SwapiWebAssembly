@@ -1,0 +1,79 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using WebAssemblyTest.Shared
+@attribute [Authorize]
+@inject HttpClient Http
+
+<PageTitle>Home</PageTitle>
+
+<div class="container">
+	<h1>SWAPI</h1>
+	<div>Star wars is cool. Let's see some details about it. Select what you want to see:</div>
+	<div class="row">
+		<div class="col-5 text-end">
+			<button class="btn btn-primary" @onclick="getPerson">People</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col text-end">
+			<button class="btn btn-primary" @onclick="populate">Populate</button>
+		</div>
+	</div>
+	@if (person != null)
+	{
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Height</th>
+					<th>Mass</th>
+					<th>Hair Color</th>
+					<th>Skin Color</th>
+					<th>Birth Year</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>@person.Name</td>
+					<td>@person.Height</td>
+					<td>@person.Mass</td>
+					<td>@person.Hair_Color</td>
+					<td>@person.Skin_Color</td>
+					<td>@person.Birth_Year</td>
+				</tr>
+			</tbody>
+		</table>
+	}
+</div>
+
+
+@code {
+	private Person person;
+	private bool disabled;
+	private int page = 1;
+
+	protected override Task OnInitializedAsync()
+	{
+		return base.OnInitializedAsync();
+	}
+
+	private async Task getPerson()
+	{
+		//person = await service.GetPersonFromApi(1);
+		try
+		{
+			person = await Http.GetFromJsonAsync<Person>($"api/Swapi/person/{page}");
+		}
+		catch (AccessTokenNotAvailableException exception)
+		{
+			exception.Redirect();
+		}
+	}
+
+	private async Task populate()
+	{
+		//await service.PopulateDatabase();
+	}
+
+}
