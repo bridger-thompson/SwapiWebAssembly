@@ -10,15 +10,11 @@ namespace WebAssemblyTest.Server.Data
 
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            new DbInitializer(builder).Seed();
-        }
-
         public DbSet<Person> Person { get; set; }
         public DbSet<Starship> Starship { get; set; }
         public DbSet<Vehicle> Vehicle { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<UserStarship> UserStarship { get; set; }
+        public DbSet<UserVehicle> UserVehicle { get; set; }
     }
 }

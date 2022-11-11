@@ -9,10 +9,10 @@ namespace WebAssemblyTest.Shared
     public class User
     {
         public string Id { get; set; }
-        public Person Person { get; set; }
-        public IEnumerable<Starship> Starships { get; set; }
-        public IEnumerable<Vehicle> Vehicles { get; set; }
-        public int ClickRate { get; set; }
-        public double AutoclickRate { get; set; }
+        public Person? Person { get; set; }
+        public List<UserStarship>? Starships { get; set; }
+        public List<UserVehicle>? Vehicles { get; set; }
+        public int ClickRate { get; set; } = 1;
+        public double AutoclickRate { get; set; } = 0;
     }
 }

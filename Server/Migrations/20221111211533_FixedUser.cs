@@ -4,7 +4,7 @@
 
 namespace WebAssemblyTest.Server.Migrations
 {
-    public partial class Start : Migration
+    public partial class FixedUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,7 +31,7 @@ namespace WebAssemblyTest.Server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    PersonId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PersonId = table.Column<int>(type: "INTEGER", nullable: true),
                     ClickRate = table.Column<int>(type: "INTEGER", nullable: false),
                     AutoclickRate = table.Column<double>(type: "REAL", nullable: false)
                 },
@@ -42,8 +42,7 @@ namespace WebAssemblyTest.Server.Migrations
                         name: "FK_User_Person_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Person",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

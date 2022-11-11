@@ -112,5 +112,20 @@ namespace WebAssemblyTest.Server.Controllers
             }
             await context.SaveChangesAsync();
         }
+
+        [HttpPost("addUser/{id}")]
+        public async Task AddUser(string id)
+        {
+            var existingUser = await context.User.FirstOrDefaultAsync(u => u.Id == id);
+            if (existingUser == null)
+            {
+                User user = new User
+                {
+                    Id = id,
+                };
+                await context.User.AddAsync(user);
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }
