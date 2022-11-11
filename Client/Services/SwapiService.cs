@@ -15,5 +15,17 @@ namespace WebAssemblyTest.Client.Services
             this.logger = logger;
 
         }
+
+        //public async Task<Person> GetPersonFromApi(int page)
+        //{
+        //    try
+        //    {
+        //        return await client.GetFromJsonAsync<Person>($"api/Swapi/person/{page}");
+        //    }
+        //    catch
+        //    {
+        //        return new Person();
+        //    }
+        //}
     }
 }
