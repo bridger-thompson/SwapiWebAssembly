@@ -79,7 +79,7 @@ namespace WebAssemblyTest.Server.Controllers
         [HttpGet("populate")]
         public async Task PopulateDatabase()
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 10; i++)
             {
                 try
                 {

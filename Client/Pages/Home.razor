@@ -73,7 +73,7 @@
 
 	private async Task populate()
 	{
-		//await service.PopulateDatabase();
+		await Http.GetAsync($"api/Swapi/populate");
 	}
 
 }
