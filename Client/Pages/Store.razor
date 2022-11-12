@@ -84,7 +84,14 @@
 						<td class="align-middle">@vehicle.Max_Atmosphering_Speed</td>
 						<td class="align-middle">@vehicle.Passengers</td>
 						<td class="align-middle">
-							<button class="btn btn-success" disabled="@(@user.Credits < @vehicle.Cost_In_Credits)" @onclick="() => PurchaseVehicle(vehicle.Id, vehicle.Cost_In_Credits)">Purchase</button>
+							@if (user.Vehicles.Find(v => v.Vehicle.Id == vehicle.Id) != null)
+							{
+								<button class="btn btn-secondary" disabled>Purchased</button>
+							}
+							else
+							{
+								<button class="btn btn-success" disabled="@(@user.Credits < @vehicle.Cost_In_Credits)" @onclick="() => PurchaseVehicle(vehicle.Id, vehicle.Cost_In_Credits)">Purchase</button>
+							}
 						</td>
 					</tr>
 				}

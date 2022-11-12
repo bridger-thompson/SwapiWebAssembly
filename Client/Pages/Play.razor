@@ -26,22 +26,12 @@
 			<button class="btn btn-success btn-lg" type="button" @onclick="IncrementCredits" onkeydown="return (event.keyCode!=13)">$$$</button>
 		</div>
 	</div>
-
-	<div class="row mt-4">
-		<div class="col text-end">
-			Cost: @RateUpgradeCost
-		</div>
-		<div class="col text-end">
-		
-		</div>
-	</div>
-
 	<div class="row mt-4">
 		<div class="col text-end">
 			<button class="btn btn-primary" type="button" @onclick="IncreaseRate">Upgrade Rate</button>
 		</div>
-		<div class="col">
-			<button class="btn btn-primary" type="button" @onclick="IncreaseAutoclicker">Upgrade Autoclicker</button>
+		<div class="col my-auto">
+			Cost: @RateUpgradeCost
 		</div>
 	</div>
 }

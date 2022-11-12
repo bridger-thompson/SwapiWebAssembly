@@ -9,42 +9,7 @@
 
 <div class="container">
 	<h1>SWAPI</h1>
-	<div>Star wars is cool. Let's see some details about it. Select what you want to see:</div>
-	<div class="row">
-		<div class="col-5 text-end">
-			<button class="btn btn-primary" @onclick="getPerson">People</button>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col text-end">
-			<button class="btn btn-primary" @onclick="populate">Populate</button>
-		</div>
-	</div>
-	@if (person != null)
-	{
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Height</th>
-					<th>Mass</th>
-					<th>Hair Color</th>
-					<th>Skin Color</th>
-					<th>Birth Year</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>@person.Name</td>
-					<td>@person.Height</td>
-					<td>@person.Mass</td>
-					<td>@person.Hair_Color</td>
-					<td>@person.Skin_Color</td>
-					<td>@person.Birth_Year</td>
-				</tr>
-			</tbody>
-		</table>
-	}
+	<div>Hello! Welcome to the great universe of <b>STAR WARS!</b> Step into a world of starships, blasters, and lots of money. The best part? It's as easy as 1 click to get! Login and have a look around to see all the great things you can do!</div>
 </div>
 
 
