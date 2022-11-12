@@ -149,6 +149,7 @@ namespace WebAssemblyTest.Server.Controllers
                 User = user,
             };
             await context.UserVehicle.AddAsync(uv);
+            user.Credits -= vehicle.Cost_In_Credits;
             await context.SaveChangesAsync();
         }
 
@@ -163,6 +164,7 @@ namespace WebAssemblyTest.Server.Controllers
                 User = user,
             };
             await context.UserStarship.AddAsync(us);
+            user.Credits -= starship.Cost_In_Credits;
             await context.SaveChangesAsync();
         }
 
