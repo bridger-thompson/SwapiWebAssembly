@@ -79,7 +79,7 @@ namespace WebAssemblyTest.Server.Controllers
         [HttpGet("populate")]
         public async Task PopulateDatabase()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 50; i++)
             {
                 try
                 {
@@ -126,6 +126,61 @@ namespace WebAssemblyTest.Server.Controllers
                 await context.User.AddAsync(user);
                 await context.SaveChangesAsync();
             }
+        }
+
+        [HttpGet("user/{id}")]
+        public async Task<User> GetUser(string id)
+        {
+            return await context.User.Include(u => u.Vehicles)
+                .ThenInclude(v => v.Vehicle)
+                .Include(u => u.Starships)
+                .ThenInclude(s => s.Starship)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        [HttpGet("vehicle/{id}/{name}")]
+        public async Task PurchaseVehicle(int id, string name)
+        {
+            Vehicle vehicle = await context.Vehicle.FirstOrDefaultAsync(v => v.Id == id);
+            User user = await context.User.FirstOrDefaultAsync(u => u.Id == name);
+            UserVehicle uv = new UserVehicle
+            {
+                Vehicle = vehicle,
+                User = user,
+            };
+            await context.UserVehicle.AddAsync(uv);
+            await context.SaveChangesAsync();
+        }
+
+        [HttpGet("starship/{id}/{name}")]
+        public async Task PurchaseStarship(int id, string name)
+        {
+            Starship starship = await context.Starship.FirstOrDefaultAsync(s => s.Id == id);
+            User user = await context.User.FirstOrDefaultAsync(u => u.Id == name);
+            UserStarship us = new UserStarship
+            {
+                Starship = starship,
+                User = user,
+            };
+            await context.UserStarship.AddAsync(us);
+            await context.SaveChangesAsync();
+        }
+
+        [HttpGet("usercredits/{id}/{amount}")]
+        public async Task UpdateCredits(string id, int amount)
+        {
+            User user = await context.User.FirstOrDefaultAsync(u => u.Id==id);
+            user.Credits += amount;
+            await context.SaveChangesAsync();
+        }
+
+        [HttpGet("userrate/{id}/{credits}")]
+        public async Task DoubleRate(string id, int credits)
+        {
+            User user = await context.User.FirstOrDefaultAsync(u => u.Id == id);
+            user.ClickRate *= 2;
+            user.Credits = credits;
+            await context.SaveChangesAsync();
         }
     }
 }

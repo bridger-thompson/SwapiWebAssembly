@@ -2,71 +2,91 @@
 @using System.Timers;
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using WebAssemblyTest.Shared
+@using WebAssemblyTest.Client.Services
 @attribute [Authorize]
+@inject SwapiService service
 
-<div class="row">
-	<div class="col">
-		<h1>Play</h1>
+@if (user != null)
+{
+	<div class="row">
+		<div class="col">
+			<h1>Play</h1>
+		</div>
+		<div class="col text-end my-auto">
+			<h3>Total Credits: @user.Credits</h3>
+		</div>
 	</div>
-	<div class="col text-end my-auto">
-		<h3>Total Credits: @credits</h3>
+	<div>
+		Rate: @user.ClickRate
 	</div>
-</div>
-<div>
-	Rate: @rate
-</div>
 
-<div class="row">
-	<div class="col text-center mt-4">
-		<button class="btn btn-success btn-lg" type="button" @onclick="IncrementCredits"  onkeydown="return (event.keyCode!=13)">$$$</button>
+	<div class="row">
+		<div class="col text-center mt-4">
+			<button class="btn btn-success btn-lg" type="button" @onclick="IncrementCredits" onkeydown="return (event.keyCode!=13)">$$$</button>
+		</div>
 	</div>
-</div>
 
-<div class="row mt-4">
-	<div class="col text-end">
-		Cost: @RateUpgradeCost
-	</div>
-	<div class="col text-end">
+	<div class="row mt-4">
+		<div class="col text-end">
+			Cost: @RateUpgradeCost
+		</div>
+		<div class="col text-end">
 		
+		</div>
 	</div>
-</div>
 
-<div class="row mt-4">
-	<div class="col text-end">
-		<button class="btn btn-primary" type="button" @onclick="IncreaseRate">Upgrade Rate</button>
+	<div class="row mt-4">
+		<div class="col text-end">
+			<button class="btn btn-primary" type="button" @onclick="IncreaseRate">Upgrade Rate</button>
+		</div>
+		<div class="col">
+			<button class="btn btn-primary" type="button" @onclick="IncreaseAutoclicker">Upgrade Autoclicker</button>
+		</div>
 	</div>
-	<div class="col">
-		<button class="btn btn-primary" type="button" @onclick="IncreaseAutoclicker">Upgrade Autoclicker</button>
-	</div>
-</div>
+}
 
 @code {
-	private long credits;
-	private int rate = 1;
+	[CascadingParameter]
+	private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+	private User user;
+
 	private double autoclickRate;
 
-	private long RateUpgradeCost { get; set; } = 10;
+	private long RateUpgradeCost { get; set; }
 
-	protected override Task OnInitializedAsync()
+	protected override async Task OnInitializedAsync()
 	{
-		credits = 0;
-		return base.OnInitializedAsync();
+		var authState = await authenticationStateTask;
+		var name = authState.User.Identity.Name;
+		user = await service.GetUserFromApi(name);
+		if (user.ClickRate == 1)
+		{
+			RateUpgradeCost = 10;
+		}
+		else
+		{
+			RateUpgradeCost = user.ClickRate * user.ClickRate * 10;
+		}
 	}
 
 	private async Task IncrementCredits()
 	{
-		credits += rate;
+		await service.UpdateCredits(user.Id, user.ClickRate);
+		user.Credits += user.ClickRate;
 	}
 
 	private async Task IncreaseRate()
 	{
 		//long cost = rate * rate * 10;
-		if (credits >= RateUpgradeCost)
+		if (user.Credits >= RateUpgradeCost)
 		{
-			rate *= 2;
-			credits -= RateUpgradeCost;
+			user.Credits -= RateUpgradeCost;
+			await service.UpdateClickRate(user.Id, user.Credits);
+			user.ClickRate *= 2;
 		}
-		RateUpgradeCost = rate * rate * 10;
+		RateUpgradeCost = user.ClickRate * user.ClickRate * 10;
 	}
 
 	private async void IncreaseAutoclicker()

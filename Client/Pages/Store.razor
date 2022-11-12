@@ -2,113 +2,130 @@
 @using WebAssemblyTest.Shared
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using WebAssemblyTest.Client.Services
 @attribute [Authorize]
 @inject HttpClient Http
+@inject SwapiService service
 
-<div class="row">
-	<div class="col">
-		<h1>Store</h1>
+@if (user != null)
+{
+	<div class="row">
+		<div class="col">
+			<h1>Store</h1>
+		</div>
+		<div class="col text-end my-auto">
+			<h3>Total Credits: @user.Credits</h3>
+		</div>
 	</div>
-	<div class="col text-end my-auto">
-		<h3>Total Credits: @credits</h3>
-	</div>
-</div>
-
-@if (starships != null)
-{
-	<h4 class="mb-0">Starships:</h4>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Model</th>
-				<th>Cost in Credits</th>
-				<th>Length</th>
-				<th>Max Speed</th>
-				<th>Hyperdrive Rating</th>
-				<th>Crew Size</th>
-				<th>Passengers</th>
-				<th>Purchased</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var starship in starships)
-			{
+	@if (user.Starships != null)
+	{
+		<h4 class="mb-0">Starships:</h4>
+		<table class="table table-striped">
+			<thead>
 				<tr>
-					<td class="align-middle">@starship.Name</td>
-					<td class="align-middle">@starship.Model</td>
-					<td class="align-middle">@starship.Cost_In_Credits</td>
-					<td class="align-middle">@starship.Length</td>
-					<td class="align-middle">@starship.Max_Atmosphering_Speed</td>
-					<td class="align-middle">@starship.Hyperdrive_Rating</td>
-					<td class="align-middle">@starship.Crew</td>
-					<td class="align-middle">@starship.Passengers</td>
-					<td class="align-middle">
-						<button class="btn btn-success" disabled="@(@credits < @starship.Cost_In_Credits)">Purchase</button>
-					</td>
+					<th>Name</th>
+					<th>Model</th>
+					<th>Cost in Credits</th>
+					<th>Length</th>
+					<th>Max Speed</th>
+					<th>Hyperdrive Rating</th>
+					<th>Crew Size</th>
+					<th>Passengers</th>
+					<th>Purchased</th>
 				</tr>
-			}
-		</tbody>
-	</table>
-}
-else
-{
-	<h4 class="my-2">Loading Starships...</h4>
-}
-@if (vehicles != null)
-{
-	<h4 class="mb-0 ">Vehicles:</h4>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Model</th>
-				<th>Cost in Credits</th>
-				<th>Length</th>
-				<th>Max Speed</th>
-				<th>Passengers</th>
-				<th>Purchase</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var vehicle in vehicles)
-			{
+			</thead>
+			<tbody>
+				@foreach (var starship in user.Starships)
+				{
+					<tr>
+						<td class="align-middle">@starship.Starship.Name</td>
+						<td class="align-middle">@starship.Starship.Model</td>
+						<td class="align-middle">@starship.Starship.Cost_In_Credits</td>
+						<td class="align-middle">@starship.Starship.Length</td>
+						<td class="align-middle">@starship.Starship.Max_Atmosphering_Speed</td>
+						<td class="align-middle">@starship.Starship.Hyperdrive_Rating</td>
+						<td class="align-middle">@starship.Starship.Crew</td>
+						<td class="align-middle">@starship.Starship.Passengers</td>
+						<td class="align-middle">
+							<button class="btn btn-success" disabled="@(@user.Credits < @starship.Starship.Cost_In_Credits)" @onclick="() => PurchaseStarship(starship.Id)">Purchase</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<h4 class="my-2">Loading Starships...</h4>
+	}
+	@if (user.Vehicles != null)
+	{
+		<h4 class="mb-0 ">Vehicles:</h4>
+		<table class="table table-striped">
+			<thead>
 				<tr>
-					<td class="align-middle">@vehicle.Name</td>
-					<td class="align-middle">@vehicle.Model</td>
-					<td class="align-middle">@vehicle.Cost_In_Credits</td>
-					<td class="align-middle">@vehicle.Length</td>
-					<td class="align-middle">@vehicle.Max_Atmosphering_Speed</td>
-					<td class="align-middle">@vehicle.Passengers</td>
-					<td class="align-middle">
-						<button class="btn btn-success" disabled="@(@credits < @vehicle.Cost_In_Credits)">Purchase</button>
-					</td>
+					<th>Name</th>
+					<th>Model</th>
+					<th>Cost in Credits</th>
+					<th>Length</th>
+					<th>Max Speed</th>
+					<th>Passengers</th>
+					<th>Purchase</th>
 				</tr>
-			}
-		</tbody>
-	</table>
-}
-else
-{
-	<h4>Loading Vehicles...</h4>
+			</thead>
+			<tbody>
+				@foreach (var vehicle in user.Vehicles)
+				{
+					<tr>
+						<td class="align-middle">@vehicle.Vehicle.Name</td>
+						<td class="align-middle">@vehicle.Vehicle.Model</td>
+						<td class="align-middle">@vehicle.Vehicle.Cost_In_Credits</td>
+						<td class="align-middle">@vehicle.Vehicle.Length</td>
+						<td class="align-middle">@vehicle.Vehicle.Max_Atmosphering_Speed</td>
+						<td class="align-middle">@vehicle.Vehicle.Passengers</td>
+						<td class="align-middle">
+							<button class="btn btn-success" disabled="@(@user.Credits < @vehicle.Vehicle.Cost_In_Credits)" @onclick="() => PurchaseVehicle(vehicle.Id)">Purchase</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<h4>Loading Vehicles...</h4>
+	}
 }
 
 @code {
-	private IEnumerable<Starship> starships;
-	private IEnumerable<Vehicle> vehicles;
-	private long credits;
+	[CascadingParameter]
+	private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+	private User user;
 
 	protected override async Task OnInitializedAsync()
 	{
-		credits = 10000;
+		var authState = await authenticationStateTask;
+		var name = authState.User.Identity.Name;
 		try
 		{
-			starships = await Http.GetFromJsonAsync<IEnumerable<Starship>>("api/Swapi/starships");
-			vehicles = await Http.GetFromJsonAsync<IEnumerable<Vehicle>>("api/Swapi/vehicles");
+			//starships = await service.GetStarshipsFromApi();
+			//vehicles = await service.GetVehiclesFromApi();
+			user = await service.GetUserFromApi(name);
 		}
 		catch (AccessTokenNotAvailableException exception)
 		{
 			exception.Redirect();
 		}
+	}
+
+	private async Task PurchaseVehicle(int id)
+	{
+		await service.PurchaseVehicle(id, user.Id);
+	}
+
+	private async Task PurchaseStarship(int id)
+	{
+		await service.PurchaseStarship(id, user.Id);
 	}
 }
