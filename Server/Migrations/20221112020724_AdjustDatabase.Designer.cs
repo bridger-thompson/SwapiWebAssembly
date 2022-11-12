@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAssemblyTest.Server.Data;
 
@@ -10,12 +11,43 @@ using WebAssemblyTest.Server.Data;
 namespace WebAssemblyTest.Server.Migrations
 {
     [DbContext(typeof(SwapiDbContext))]
-    partial class SwapiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221112020724_AdjustDatabase")]
+    partial class AdjustDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.11");
+
+            modelBuilder.Entity("StarshipUser", b =>
+                {
+                    b.Property<int>("StarshipsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("StarshipsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("StarshipUser");
+                });
+
+            modelBuilder.Entity("UserVehicle", b =>
+                {
+                    b.Property<string>("UsersId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("VehiclesId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("UsersId", "VehiclesId");
+
+                    b.HasIndex("VehiclesId");
+
+                    b.ToTable("UserVehicle");
+                });
 
             modelBuilder.Entity("WebAssemblyTest.Shared.Person", b =>
                 {
@@ -89,12 +121,7 @@ namespace WebAssemblyTest.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Starship");
                 });
@@ -152,21 +179,39 @@ namespace WebAssemblyTest.Server.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Vehicle");
                 });
 
-            modelBuilder.Entity("WebAssemblyTest.Shared.Starship", b =>
+            modelBuilder.Entity("StarshipUser", b =>
+                {
+                    b.HasOne("WebAssemblyTest.Shared.Starship", null)
+                        .WithMany()
+                        .HasForeignKey("StarshipsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAssemblyTest.Shared.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("UserVehicle", b =>
                 {
                     b.HasOne("WebAssemblyTest.Shared.User", null)
-                        .WithMany("Starships")
-                        .HasForeignKey("UserId");
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAssemblyTest.Shared.Vehicle", null)
+                        .WithMany()
+                        .HasForeignKey("VehiclesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("WebAssemblyTest.Shared.User", b =>
@@ -176,20 +221,6 @@ namespace WebAssemblyTest.Server.Migrations
                         .HasForeignKey("PersonId");
 
                     b.Navigation("Person");
-                });
-
-            modelBuilder.Entity("WebAssemblyTest.Shared.Vehicle", b =>
-                {
-                    b.HasOne("WebAssemblyTest.Shared.User", null)
-                        .WithMany("Vehicles")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("WebAssemblyTest.Shared.User", b =>
-                {
-                    b.Navigation("Starships");
-
-                    b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618
         }

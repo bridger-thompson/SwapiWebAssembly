@@ -131,11 +131,18 @@ namespace WebAssemblyTest.Server.Controllers
         [HttpGet("user/{id}")]
         public async Task<User> GetUser(string id)
         {
-            return await context.User.Include(u => u.Vehicles)
-                .ThenInclude(v => v.Vehicle)
-                .Include(u => u.Starships)
-                .ThenInclude(s => s.Starship)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            //return await context.User.Include(u => u.Vehicles)
+            //    .ThenInclude(v => v.Vehicle)
+            //    .Include(u => u.Starships)
+            //    .ThenInclude(s => s.Starship)
+            //    .FirstOrDefaultAsync(u => u.Id == id);
+            //var user = await context.User.FirstOrDefaultAsync(u => u.Id == id);
+            //user.Vehicles = await context.UserVehicle.Where(uv => uv.User.Id == id).ToListAsync();
+            //return user;
+            var user = await context.User.Include(v => v.Vehicles).FirstOrDefaultAsync(u => u.Id == id);
+            
+            return user;
+            //throw new NotImplementedException();
         }
 
         [HttpGet("vehicle/{id}/{name}")]
@@ -143,12 +150,16 @@ namespace WebAssemblyTest.Server.Controllers
         {
             Vehicle vehicle = await context.Vehicle.FirstOrDefaultAsync(v => v.Id == id);
             User user = await context.User.FirstOrDefaultAsync(u => u.Id == name);
-            UserVehicle uv = new UserVehicle
-            {
-                Vehicle = vehicle,
-                User = user,
-            };
-            await context.UserVehicle.AddAsync(uv);
+            //UserVehicle uv = new UserVehicle
+            //{
+            //    Vehicle = vehicle,
+            //    User = user,
+            //};
+
+            await context.Vehicle.AddAsync(vehicle);
+            user.Credits -= vehicle.Cost_In_Credits;
+            
+            //await context.UserVehicle.AddAsync(uv);
             await context.SaveChangesAsync();
         }
 
@@ -157,12 +168,16 @@ namespace WebAssemblyTest.Server.Controllers
         {
             Starship starship = await context.Starship.FirstOrDefaultAsync(s => s.Id == id);
             User user = await context.User.FirstOrDefaultAsync(u => u.Id == name);
-            UserStarship us = new UserStarship
-            {
-                Starship = starship,
-                User = user,
-            };
-            await context.UserStarship.AddAsync(us);
+            //UserStarship us = new UserStarship
+            //{
+            //    Starship = starship,
+            //    User = user,
+            //};
+
+            await context.Starship.AddAsync(starship);
+            user.Credits -= starship.Cost_In_Credits;
+
+            //await context.UserStarship.AddAsync(us);
             await context.SaveChangesAsync();
         }
 

@@ -11,8 +11,8 @@ namespace WebAssemblyTest.Shared
         public string Id { get; set; }
         public Person? Person { get; set; }
         public long Credits { get; set; } = 0;
-        public List<UserStarship>? Starships { get; set; }
-        public List<UserVehicle>? Vehicles { get; set; }
+        public List<Starship>? Starships { get; set; } = new();
+        public List<Vehicle>? Vehicles { get; set; } = new();
         public int ClickRate { get; set; } = 1;
         public double AutoclickRate { get; set; } = 0;
     }

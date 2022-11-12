@@ -17,7 +17,7 @@
 			<h3>Total Credits: @user.Credits</h3>
 		</div>
 	</div>
-	@if (user.Starships != null)
+	@if (starships != null)
 	{
 		<h4 class="mb-0">Starships:</h4>
 		<table class="table table-striped">
@@ -35,19 +35,19 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var starship in user.Starships)
+				@foreach (var starship in starships)
 				{
 					<tr>
-						<td class="align-middle">@starship.Starship.Name</td>
-						<td class="align-middle">@starship.Starship.Model</td>
-						<td class="align-middle">@starship.Starship.Cost_In_Credits</td>
-						<td class="align-middle">@starship.Starship.Length</td>
-						<td class="align-middle">@starship.Starship.Max_Atmosphering_Speed</td>
-						<td class="align-middle">@starship.Starship.Hyperdrive_Rating</td>
-						<td class="align-middle">@starship.Starship.Crew</td>
-						<td class="align-middle">@starship.Starship.Passengers</td>
+						<td class="align-middle">@starship.Name</td>
+						<td class="align-middle">@starship.Model</td>
+						<td class="align-middle">@starship.Cost_In_Credits</td>
+						<td class="align-middle">@starship.Length</td>
+						<td class="align-middle">@starship.Max_Atmosphering_Speed</td>
+						<td class="align-middle">@starship.Hyperdrive_Rating</td>
+						<td class="align-middle">@starship.Crew</td>
+						<td class="align-middle">@starship.Passengers</td>
 						<td class="align-middle">
-							<button class="btn btn-success" disabled="@(@user.Credits < @starship.Starship.Cost_In_Credits)" @onclick="() => PurchaseStarship(starship.Id)">Purchase</button>
+							<button class="btn btn-success" disabled="@(@user.Credits < @starship.Cost_In_Credits)" @onclick="() => PurchaseStarship(starship.Id)">Purchase</button>
 						</td>
 					</tr>
 				}
@@ -58,7 +58,7 @@
 	{
 		<h4 class="my-2">Loading Starships...</h4>
 	}
-	@if (user.Vehicles != null)
+	@if (vehicles != null)
 	{
 		<h4 class="mb-0 ">Vehicles:</h4>
 		<table class="table table-striped">
@@ -74,17 +74,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var vehicle in user.Vehicles)
+				@foreach (var vehicle in vehicles)
 				{
 					<tr>
-						<td class="align-middle">@vehicle.Vehicle.Name</td>
-						<td class="align-middle">@vehicle.Vehicle.Model</td>
-						<td class="align-middle">@vehicle.Vehicle.Cost_In_Credits</td>
-						<td class="align-middle">@vehicle.Vehicle.Length</td>
-						<td class="align-middle">@vehicle.Vehicle.Max_Atmosphering_Speed</td>
-						<td class="align-middle">@vehicle.Vehicle.Passengers</td>
+						<td class="align-middle">@vehicle.Name</td>
+						<td class="align-middle">@vehicle.Model</td>
+						<td class="align-middle">@vehicle.Cost_In_Credits</td>
+						<td class="align-middle">@vehicle.Length</td>
+						<td class="align-middle">@vehicle.Max_Atmosphering_Speed</td>
+						<td class="align-middle">@vehicle.Passengers</td>
 						<td class="align-middle">
-							<button class="btn btn-success" disabled="@(@user.Credits < @vehicle.Vehicle.Cost_In_Credits)" @onclick="() => PurchaseVehicle(vehicle.Id)">Purchase</button>
+							<button class="btn btn-success" disabled="@(@user.Credits < @vehicle.Cost_In_Credits)" @onclick="() => PurchaseVehicle(vehicle.Id)">Purchase</button>
 						</td>
 					</tr>
 				}
@@ -102,6 +102,8 @@
 	private Task<AuthenticationState> authenticationStateTask { get; set; }
 
 	private User user;
+	private IEnumerable<Starship> starships;
+	private IEnumerable<Vehicle> vehicles;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -109,8 +111,8 @@
 		var name = authState.User.Identity.Name;
 		try
 		{
-			//starships = await service.GetStarshipsFromApi();
-			//vehicles = await service.GetVehiclesFromApi();
+			starships = await service.GetStarshipsFromApi();
+			vehicles = await service.GetVehiclesFromApi();
 			user = await service.GetUserFromApi(name);
 		}
 		catch (AccessTokenNotAvailableException exception)

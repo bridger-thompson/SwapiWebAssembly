@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAssemblyTest.Server.Data;
 
@@ -10,9 +11,10 @@ using WebAssemblyTest.Server.Data;
 namespace WebAssemblyTest.Server.Migrations
 {
     [DbContext(typeof(SwapiDbContext))]
-    partial class SwapiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221112040400_alteringUserRelationships")]
+    partial class alteringUserRelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.11");

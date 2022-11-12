@@ -15,7 +15,6 @@ namespace WebAssemblyTest.Client.Services
             this.config = config;
             this.client = client;
             this.logger = logger;
-
         }
 
         public async Task<IEnumerable<Starship>> GetStarshipsFromApi()
