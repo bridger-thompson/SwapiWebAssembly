@@ -1,7 +1,12 @@
 using AngleSharp;
 using WebAssemblyTest.Client.Pages;
 using WebAssemblyTest.Client.Services;
-using TestContext = Bunit.TestContext;
+using Bunit;
+using NUnit.Framework;
+using AngleSharp.Dom;
+using RichardSzalay.MockHttp;
+using System.Collections.Generic;
+using WebAssemblyTest.Shared;
 
 namespace WebAssemblyTestProj;
 
@@ -11,31 +16,33 @@ namespace WebAssemblyTestProj;
 /// </summary>
 public class CounterCSharpTests : BunitTestContext
 {
+	[Test]
+	public void HomePageComponentRenders()
+	{
+		using var ctx = new Bunit.TestContext();
+
+		var comp = ctx.RenderComponent<Home>();
+
+		comp.MarkupMatches("<div class=\"container\">\r\n\t<h1>SWAPI</h1>\r\n\t" +
+            "<div>Hello! Welcome to the great universe of <b>STAR WARS!</b> " +
+            "Step into a world of starships, blasters, and lots of money. The best part? " +
+            "It's as easy as 1 click to get! Login and have a look around to see all the great things you can do!</div>\r\n</div>");
+	}
 	
 	[Test]
 	public void CreditsStartAtZero()
 	{
-		var ctx = new TestContext();
+		using var ctx = new Bunit.TestContext();
+        var mock = ctx.Services.AddMockHttpClient();
+        ctx.Services.AddScoped<SwapiService>();
+        mock.When("*api/Swapi/user/1").RespondJson("{ \"id\":\"EthanW\",\"person\":null,\"credits\":0,\"starships\":[],\"vehicles\":[],\"clickRate\":1,\"autoclickRate\":0}");
 
-		ctx.Services.AddScoped<SwapiService>();
+		var authContex = ctx.AddTestAuthorization();
+		authContex.SetAuthorizing();
 
-		// Arrange
 		var comp = ctx.RenderComponent<Play>();
+		var smallElmnt = comp.WaitForElement(@"h3").TextContent;
 
-		// Assert that content of the paragraph shows counter at zero
-		comp.Find("h3").MarkupMatches("<h3>Total Credits: 0</h3>");
+		smallElmnt.MarkupMatches(@"<h3>Total Credits: </h3>");
 	}
-
-	//[Test]
-	//public void ClickingButtonIncrementsCounter()
-	//{
-	//	// Arrange
-	//	var cut = RenderComponent<Counter>();
-
-	//	// Act - click button to increment counter
-	//	cut.Find("button").Click();
-
-	//	// Assert that the counter was incremented
-	//	cut.Find("p").MarkupMatches("<p>Current count: 1</p>");
-	//}
 }
