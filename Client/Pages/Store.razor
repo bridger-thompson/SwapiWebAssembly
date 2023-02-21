@@ -17,47 +17,6 @@
 			<h3>Total Credits: @user.Credits</h3>
 		</div>
 	</div>
-	@if (starships != null)
-	{
-		<h4 class="mb-0">Starships:</h4>
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Model</th>
-					<th>Cost in Credits</th>
-					<th>Length</th>
-					<th>Max Speed</th>
-					<th>Hyperdrive Rating</th>
-					<th>Crew Size</th>
-					<th>Passengers</th>
-					<th>Purchased</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var starship in starships)
-				{
-					<tr>
-						<td class="align-middle">@starship.Name</td>
-						<td class="align-middle">@starship.Model</td>
-						<td class="align-middle">@starship.Cost_In_Credits</td>
-						<td class="align-middle">@starship.Length</td>
-						<td class="align-middle">@starship.Max_Atmosphering_Speed</td>
-						<td class="align-middle">@starship.Hyperdrive_Rating</td>
-						<td class="align-middle">@starship.Crew</td>
-						<td class="align-middle">@starship.Passengers</td>
-						<td class="align-middle">
-							<button class="btn btn-success" disabled="@(@user.Credits < @starship.Cost_In_Credits)" @onclick="() => PurchaseStarship(starship.Id, starship.Cost_In_Credits)">Purchase</button>
-						</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	}
-	else
-	{
-		<h4 class="my-2">Loading Starships...</h4>
-	}
 	@if (vehicles != null)
 	{
 		<h4 class="mb-0 ">Vehicles:</h4>
@@ -102,6 +61,47 @@
 	{
 		<h4>Loading Vehicles...</h4>
 	}
+	@if (starships != null)
+	{
+		<h4 class="mb-0">Starships:</h4>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Model</th>
+					<th>Cost in Credits</th>
+					<th>Length</th>
+					<th>Max Speed</th>
+					<th>Hyperdrive Rating</th>
+					<th>Crew Size</th>
+					<th>Passengers</th>
+					<th>Purchased</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var starship in starships)
+				{
+					<tr>
+						<td class="align-middle">@starship.Name</td>
+						<td class="align-middle">@starship.Model</td>
+						<td class="align-middle">@starship.Cost_In_Credits</td>
+						<td class="align-middle">@starship.Length</td>
+						<td class="align-middle">@starship.Max_Atmosphering_Speed</td>
+						<td class="align-middle">@starship.Hyperdrive_Rating</td>
+						<td class="align-middle">@starship.Crew</td>
+						<td class="align-middle">@starship.Passengers</td>
+						<td class="align-middle">
+							<button class="btn btn-success" disabled="@(@user.Credits < @starship.Cost_In_Credits)" @onclick="() => PurchaseStarship(starship.Id, starship.Cost_In_Credits)">Purchase</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	else
+	{
+		<h4 class="my-2">Loading Starships...</h4>
+	}
 }
 
 @code {
@@ -132,12 +132,12 @@
 	private async Task PurchaseVehicle(int id, long cost)
 	{
 		await service.PurchaseVehicle(id, user.Id);
-		user.Credits -= cost;
+		user = await service.GetUserFromApi(user.Id);
 	}
 
 	private async Task PurchaseStarship(int id, long cost)
 	{
 		await service.PurchaseStarship(id, user.Id);
-		user.Credits -= cost;
+		user = await service.GetUserFromApi(user.Id);
 	}
 }

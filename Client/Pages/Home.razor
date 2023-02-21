@@ -2,7 +2,6 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using WebAssemblyTest.Shared
-@*@attribute [Authorize]*@
 @inject HttpClient Http
 
 <PageTitle>Home</PageTitle>
@@ -14,26 +13,9 @@
 
 
 @code {
-	private Person person;
-	private bool disabled;
-	private int page = 1;
-
 	protected override Task OnInitializedAsync()
 	{
 		return base.OnInitializedAsync();
-	}
-
-	private async Task getPerson()
-	{
-		//person = await service.GetPersonFromApi(1);
-		try
-		{
-			person = await Http.GetFromJsonAsync<Person>($"api/Swapi/person/{page}");
-		}
-		catch (AccessTokenNotAvailableException exception)
-		{
-			exception.Redirect();
-		}
 	}
 
 	private async Task populate()

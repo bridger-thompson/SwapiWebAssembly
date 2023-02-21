@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using System.Text.Json.Serialization;
 using WebAssemblyTest.Server.Data;
+using Hellang.Middleware.ProblemDetails;
+using Serilog;
+using Serilog.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,19 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Host.UseSerilog((context, loggerConfig) =>
+{
+	loggerConfig.WriteTo.Console()
+	.Enrich.WithExceptionDetails()
+	.WriteTo.Seq("http://seq");
+});
+
+builder.Services.AddProblemDetails(opts =>
+{
+    opts.IncludeExceptionDetails = (ctx, ex) => false;
+}
+);
 
 var app = builder.Build();
 
