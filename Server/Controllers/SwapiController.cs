@@ -8,10 +8,10 @@ using WebAssemblyTest.Shared;
 
 namespace WebAssemblyTest.Server.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    [RequiredScope(RequiredScopesConfigurationKey = "AzureAdB2C:Scopes")]
+    //[RequiredScope(RequiredScopesConfigurationKey = "AzureAdB2C:Scopes")]
     public class SwapiController : ControllerBase
     {
         private readonly ILogger<SwapiController> logger;

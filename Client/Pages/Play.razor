@@ -78,39 +78,4 @@
 		}
 		RateUpgradeCost = user.ClickRate * user.ClickRate * 10;
 	}
-
-	private async void IncreaseAutoclicker()
-	{
-		//long cost;
-		//if (autoclickRate == 0)
-		//{
-		//	cost = 10;
-		//}
-		//else 
-		//{
-		//	cost = (long)(10 / Math.Pow(2, autoclickRate));
-		//}
-		//if (credits >= cost)
-		//{
-		//	if (autoclickRate == 0)
-		//	{
-		//		var thread = new System.Threading.Thread(async () => await RunClicker());
-		//		thread.Start();
-		//	}
-		//	else
-		//	{
-		//		autoclickRate /= 2;
-		//	}
-		//	credits -= cost;
-		//}
-	}
-
-	//private async Task RunClicker(double interval)
-	//{
-	//	while (true)
-	//	{
-	//		await Task.Delay(1000 * (int)autoclickRate);
-	//		credits += rate;
-	//	}
-	//}
 }
