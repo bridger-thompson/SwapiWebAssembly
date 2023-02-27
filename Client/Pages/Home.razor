@@ -1,13 +1,17 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using WebAssemblyTest.Client.Services;
 @using WebAssemblyTest.Shared
 @inject HttpClient Http
+@inject SwapiService service
+
 
 <PageTitle>Home</PageTitle>
 
 <div class="container">
 	<h1>SWAPI</h1>
+<div>Also here is our random db thing: @testName</div>
 	<div>Hello! Welcome to the great universe of <b>STAR WARS!</b> Step into a world of starships, blasters, and lots of money. The best part? It's as easy as 1 click to get! Login and have a look around to see all the great things you can do!</div>
 	<div class="row">
 		<div class="col text-end">
@@ -18,14 +22,22 @@
 
 
 @code {
-	protected override Task OnInitializedAsync()
+
+	private string testName;
+
+	protected override async Task OnInitializedAsync()
 	{
-		return base.OnInitializedAsync();
+		var t = await service.GetTestThing();
+		if (t != null)
+		{
+			testName = t;
+		}
+		await base.OnInitializedAsync();
 	}
 
 	private async Task populate()
 	{
-		await Http.GetAsync($"api/Swapi/populate");
+		//await Http.GetAsync($"api/Swapi/populate");
 	}
 
 }

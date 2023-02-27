@@ -17,12 +17,20 @@ namespace WebAssemblyTest.Server.Controllers
         private readonly ILogger<SwapiController> logger;
         private readonly SwapiDbContext context;
         private readonly HttpClient client;
+        private readonly testPostgres testContext;
 
-        public SwapiController(ILogger<SwapiController> logger, SwapiDbContext context, HttpClient client)
+        public SwapiController(ILogger<SwapiController> logger, SwapiDbContext context, HttpClient client, testPostgres testContext)
         {
             this.logger = logger;
             this.context = context;
             this.client = client;
+            this.testContext = testContext;
+        }
+
+        [HttpGet("test")]
+        public async Task<Test> GetTestThing()
+        {
+            return await testContext.Tests.FirstOrDefaultAsync(a => a.Name == "test");
         }
 
         [HttpGet("person/{page}")]

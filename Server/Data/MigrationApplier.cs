@@ -21,7 +21,7 @@ namespace WebAssemblyTest.Server.Data
                 {
                     var context = scope.ServiceProvider.GetRequiredService<SwapiDbContext>();
                     logger.LogInformation("Applying migrations...");
-                    context.Database.Migrate();
+                    //context.Database.Migrate();
                     logger.LogInformation("Migrations applied successfully!");
                 }
                 catch (Exception ex)

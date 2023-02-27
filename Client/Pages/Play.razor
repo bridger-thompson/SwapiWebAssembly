@@ -44,6 +44,7 @@
 
 	private double autoclickRate;
 
+
 	private long RateUpgradeCost { get; set; }
 
 	protected override async Task OnInitializedAsync()
@@ -51,6 +52,7 @@
 		var authState = await authenticationStateTask;
 		var name = authState.User.Identity.Name;
 		user = await service.GetUserFromApi(name);
+		
 		if (user.ClickRate == 1)
 		{
 			RateUpgradeCost = 10;

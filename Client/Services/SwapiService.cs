@@ -16,6 +16,12 @@ namespace WebAssemblyTest.Client.Services
 
         }
 
+        public async Task<string> GetTestThing()
+        {
+            var testThing = await client.GetFromJsonAsync<Test>("api/Swapi/test");
+            return testThing.Name;
+        }
+
         public async Task<IEnumerable<Starship>> GetStarshipsFromApi()
         {
             return await client.GetFromJsonAsync<IEnumerable<Starship>>("api/Swapi/starships");
